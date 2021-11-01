@@ -7,5 +7,8 @@ export default defineConfig({
   plugins: [
     vue(),
     // createVuePlugin()
-  ]
+  ],
+  server: {
+    host: '0.0.0.0'
+  }
 })
