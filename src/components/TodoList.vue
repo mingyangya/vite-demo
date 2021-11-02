@@ -7,11 +7,12 @@
       <input type="text" v-model="val" @keydown.enter="add" class="todo-input"/>
     </section>
     
-    <template v-if="todos.length">
+    <template v-if="todos_back.length">
       <ul class="list">
         <li v-for="(todo, i) in todos" :key="i" :class="{'active': todo.completed}">
           <input type="checkbox" v-model="todo.completed" class="checkbox"/>
           <span :class="{ completed: todo.completed }"> {{ todo.val }}</span>
+          <span class="close" @click="clearItem(i)">x</span>
         </li>
       </ul>
 
@@ -29,20 +30,25 @@
 import { ref,computed } from "vue"
 const val = ref('')
 const todos = ref([])
+const todos_back = ref([])
 const activeMenu = ref(1)
 const menuList = ref([{
   name: 'All',
-  id: 1
+  id: 1,
+  alias: 'all'
 }, {
   name: 'Active',
-  id: 2
+  id: 2,
+  alias: 'active'
 }, {
   name: 'Completed',
-  id: 3
+  id: 3,
+  alias: 'completed'
 }])
 
 function add () {
   todos.value.push({val: val.value, completed: false})
+  saveTodos()
   clear()
 }
 
@@ -62,13 +68,47 @@ const allDone = computed({
     todos.value.forEach(item => {
       item.completed === value
     })
+    saveTodos()
   }
 })
+
+function saveTodos () {
+  todos_back.value = [...todos.value]
+}
 
 function clickMenu (item) {
   console.log(activeMenu, item)
   activeMenu.value = item.id
+  switch(item.alias) {
+    case 'all':
+      selectAll()
+      break
+    case 'active':
+      selectActive()
+      break
+    case 'completed':
+      selectCompleted()
+      break
+  }
 }
+
+function selectAll () {
+  todos.value = todos_back.value
+}
+
+function selectActive () {
+  todos.value = todos_back.value.filter(item => !item.completed)
+}
+
+function selectCompleted () {
+  todos.value = todos_back.value.filter(item => item.completed)
+}
+
+function clearItem (index) {
+  todos.value.splice(index,1)
+  saveTodos()
+}
+
 
 </script>
 
@@ -130,16 +170,25 @@ li {
     padding: 15px 5px 15px 5px;
     border-bottom: 1px solid #ededed;
 
+    .close {
+      display: none;
+    }
+
+    &.active {
+      color: #d9d9d9;
+      text-decoration: line-through;
+    }
+
     &:hover,
     &.active {
-      &:before {
-        content: '+';
+      .close {
+        display: block;
         position: absolute;
         top: 17px;
         right: 12px;
-        transform: rotate(45deg);
         color: #e98848;
         font-size: 32px;
+        cursor: pointer;
       }
     }
   }
