@@ -1,9 +1,11 @@
 <template>
-  <ToDoList />
+  <!-- <ToDoList /> -->
+  <Rate :value="3" theme="orange"/>
 </template>
 
 <script setup>
 import ToDoList from './components/TodoList.vue'
+import Rate from './components/Rate.vue'
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
