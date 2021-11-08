@@ -1,17 +1,17 @@
 <template>
   <div :style="rateStyle">
-    <div class="rate">
-      <span v-for="item in 5" :key="item" class="item" @mouseover="mouseOver(item)">☆</span>
+    <div class="rate" @mouseout="mouseOut">
+      <span v-for="item in 5" :key="item" class="item" @mouseover="mouseOver(item, 1)" @click.stop="onRate(item, 1)">☆</span>
       <span class="hollow" :style="{'width': `${width}em`}">
-        <span v-for="item in 5" :key="item" class="item" @mouseover="mouseOver(item)">★</span>
+        <span v-for="item in 5" :key="item" class="item" @mouseover.stop="mouseOver(item, 2)" @click.stop="onRate(item, 2)">★</span>
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import {defineProps, computed, ref} from 'vue'
-let props = defineProps({
+import {defineProps, computed, ref, defineEmits} from 'vue'
+const props = defineProps({
   value: Number,
   theme: {
     type: String,
@@ -19,11 +19,13 @@ let props = defineProps({
   }
 })
 
+const emits = defineEmits(['update-rate'])
+
 let rate = computed(() => '★★★★★☆☆☆☆☆'.slice(5 - props.value, 10 - props.value))
 
 let width = ref(0)
 
-const themeObj = { 
+const themeObj = {
   'black': '#00', 
   'white': '#fff',
   'red': '#f5222d', 
@@ -39,9 +41,22 @@ const rateStyle = computed(() => {
   } 
 })
 
-function mouseOver(i) { 
-  console.log(i)
-  width.value = i 
+function mouseOver(i, index) { 
+  width.value = i
+  updateRate()
+}
+
+function onRate (i, index) {
+  width.value = i
+  updateRate()
+}
+
+function updateRate (i) {
+  emits('update-rate', i)
+}
+
+function mouseOut () {
+  width.value = props.value
 }
 </script>
 
@@ -53,7 +68,7 @@ function mouseOver(i) {
 }
 
 .item {
-
+  cursor: pointer;
 }
 
 .hollow {
