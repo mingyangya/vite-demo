@@ -12,16 +12,16 @@
 <script setup>
 import {defineProps, computed, ref, defineEmits} from 'vue'
 const props = defineProps({
-  value: Number,
+  modalValue: Number,
   theme: {
     type: String,
     default: 'black'
   }
 })
 
-const emits = defineEmits(['update-rate'])
+const emits = defineEmits(['update:modalValue'])
 
-let rate = computed(() => '★★★★★☆☆☆☆☆'.slice(5 - props.value, 10 - props.value))
+let rate = computed(() => '★★★★★☆☆☆☆☆'.slice(5 - props.modalValue, 10 - props.modalValue))
 
 let width = ref(0)
 
@@ -52,11 +52,11 @@ function onRate (i, index) {
 }
 
 function updateRate (i) {
-  emits('update-rate', i)
+  emits('update:modalValue', i)
 }
 
 function mouseOut () {
-  width.value = props.value
+  width.value = props.modalValue
 }
 </script>
 
