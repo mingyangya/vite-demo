@@ -1,7 +1,8 @@
 <template>
   <div class="vuex-test">
-    {{count}}
+    {{count}} - {{doubleCount}}
     <button @click="add">add</button>
+    <button @click="asyncAdd">asyncAdd</button>
   </div>
 </template>
 
@@ -11,8 +12,14 @@ import { useStore } from '../store/gvuex'
 let store = useStore()
 let count = computed(() => store.state.count)
 
+let doubleCount = store.getters.doubleCount
+
 function add () {
   store.commit('add')
+}
+
+function asyncAdd () {
+  store.dispatch('asyncAdd')
 }
 </script>
 

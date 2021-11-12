@@ -1,5 +1,4 @@
-import { options } from 'less'
-import { inject, reactive } from 'vue'
+import { inject, reactive, computed } from 'vue'
 
 const STORE_KEY = '__store__'
 
@@ -18,15 +17,28 @@ class Store {
     })
 
     this._mutations = options.mutations
+    this._actions = options.actions
+
+    this.getters = {}
+
+    Object.keys(options.getters).forEach(name => {
+      const fn = options.getters[name]
+      this.getters[name] = computed(() => fn(this.state))
+    })
   }
 
   get state () {
     return this._state.data
   }
 
-  commit (type, payload) {
+  commit = (type, payload) => {
     const entry = this._mutations[type]
-    entry && entry(this.state,payload)
+    entry && entry(this.state, payload)
+  }
+
+  dispatch (type, payload) {
+    const entry = this._actions[type]
+    entry && entry(this, payload)
   }
 
   install (app) {
