@@ -8,10 +8,11 @@
 import { ref } from 'vue'
 import ToDoList from '../components/TodoList.vue'
 import Rate from '../components/Rate.vue'
+import VuexTest from '../components/VuexTest.vue'
 
 let rateValue = ref(0)
 
-let currentComponent = Rate
+let currentComponent = VuexTest
 
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
